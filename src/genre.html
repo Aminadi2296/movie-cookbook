@@ -3,38 +3,15 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Movie Recipes by Genre</title>
-    <link rel="stylesheet" href="/src/styles.css" />
+    <title>Genre Movies</title>
   </head>
   <body>
-    <header class="genre-header" id="genre-header">
-      <a href="/" class="back-button">
-        <svg
-          width="16"
-          height="16"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-        >
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-            d="M10 19l-7-7m0 0l7-7m-7 7h18"
-          />
-        </svg>
-        All Genres
-      </a>
-      <h1 id="genre-title">Loading Genre...</h1>
+    <header>
+      <h1 id="page-title">Genre Movies</h1>
     </header>
 
-    <main>
-      <div id="movies-container" class="movies-grid">
-        <!-- Dynamically populated by main.js -->
-        <div class="loader">Loading movies and recipes...</div>
-      </div>
-    </main>
+    <div id="movies-container"></div>
 
-    <script type="module" src="/src/js/main.js"></script>
+    <script type="module" src="/src/js/genrePage.js"></script>
   </body>
 </html>
