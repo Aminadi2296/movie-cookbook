@@ -1,69 +1,81 @@
-console.log('genrePage.js loaded');
-
 // src/js/genrePage.js
-import { fetchMoviesByGenre, getRecipeForMovie } from './api.js'; 
-import { showLoader, showError } from './utils.js';
+
+console.log('genrePage.js loaded');  // Ensure the file is loading
 
 export async function loadGenrePage() {
-    console.log('loadGenrePage function is running');
+  console.log('loadGenrePage function is running');  // Check if the function is running
 
   try {
-    const container = document.getElementById('movies-container');
-    
-    // Show loader initially
-    showLoader('movies-container');
-
     // Get the genre from the URL (for example, ?type=action)
     const genre = new URLSearchParams(window.location.search).get('type');
-    console.log('Selected Genre:', genre);  // This should now work correctly!
+    console.log('Selected Genre:', genre);  // Check the selected genre
 
-    if (!genre) return window.location.href = '/'; // Fallback if no genre is specified
+    if (!genre) {
+      console.error('No genre found in URL');
+      return window.location.href = '/';  // Redirect if no genre found
+    }
 
-    // Set the page title dynamically based on the genre
-    document.getElementById('page-title').textContent = 
-      `${genre.charAt(0).toUpperCase() + genre.slice(1)} Movies`;
+    // Check if the page-title element exists and update the content
+    const pageTitleElement = document.getElementById('page-title');
+    if (pageTitleElement) {
+      console.log('Page title element found:', pageTitleElement);  // Ensure the element exists
+      pageTitleElement.textContent = `${genre.charAt(0).toUpperCase() + genre.slice(1)} Movies`;  // Update title
+    } else {
+      console.error('Page title element not found!');
+    }
 
-    // Fetch movies for the selected genre
-    const movies = await fetchMoviesByGenre(genre);
-    console.log('Fetched Movies:', movies);  // Log movies fetched
+    // Dynamically update the browser tab title as well
+    document.title = `${genre.charAt(0).toUpperCase() + genre.slice(1)} Movies`;
+    console.log('Browser tab title updated to:', document.title);  // Log the new tab title
 
-    // Render the movies and their recipes
-    renderMoviesWithRecipes(movies);
+    // Fetch movies for the genre (make sure api.js is working correctly)
+    const movies = await fetchMoviesByGenre(genre);  // Using the existing fetch function
+    console.log('Fetched Movies:', movies);
 
+    // If no movies are found, display a message
+    const moviesContainer = document.getElementById('movies-container');
+    if (movies.length === 0) {
+      moviesContainer.innerHTML = 'No movies found for this genre.';
+      return;
+    }
+
+    // Display the movies
+    moviesContainer.innerHTML = movies
+      .map(movie => {
+        console.log('Movie Data:', movie);
+        return `
+          <div class="movie">
+            <h3>${movie.title} (${movie.year})</h3>
+            <img src="${movie.image}" alt="${movie.title}" />
+          </div>
+        `;
+      })
+      .join('');
   } catch (error) {
-    console.error('Error loading genre page:', error);  // Log any errors here
-    showError('movies-container', 'Failed to load movies');
+    console.error('Error loading genre page:', error);
   }
 }
 
-async function renderMoviesWithRecipes(movies) {
-  const container = document.getElementById('movies-container');
+// Fetch movies by genre from the API
+async function fetchMoviesByGenre(genre) {
+  const apiUrl = `https://imdb.iamidiotareyoutoo.com/search?q=${genre}`;
+  try {
+    const response = await fetch(apiUrl);
+    const data = await response.json();
 
-  if (movies.length === 0) {
-    container.innerHTML = '<p>No movies found for this genre.</p>';
-    return;
+    if (data.ok && Array.isArray(data.description)) {
+      return data.description.map(item => ({
+        title: item['#TITLE'] || 'No Title',
+        image: item['#IMG_POSTER'] || 'path/to/fallback-image.jpg',
+        year: item['#YEAR'] || 'No Year',
+        imdbId: item['#IMDB_ID']
+      }));
+    } else {
+      console.error('Error fetching movie data:', data.error_code);
+      return [];
+    }
+  } catch (error) {
+    console.error('Error fetching movies from API:', error);
+    return [];
   }
-
-  // Generate HTML for each movie
-  container.innerHTML = movies.map(movie => `
-    <div class="movie-recipe-pair" data-movie-id="${movie.id}">
-      <div class="movie-card">
-        <img src="${movie.image}" alt="${movie.title}">
-        <h3>${movie.title}</h3>
-      </div>
-      <div class="recipe-placeholder">Loading recipe...</div>
-    </div>
-  `).join('');
-
-  // For each movie, load the recipe
-  movies.forEach(async movie => {
-    const recipe = await getRecipeForMovie(movie.title);
-    const recipePlaceholder = document.querySelector(`[data-movie-id="${movie.id}"] .recipe-placeholder`);
-
-    recipePlaceholder.innerHTML = recipe ? ` 
-      <img src="${recipe.image}" alt="${recipe.title}">
-      <h4>${recipe.title}</h4>
-      <a href="/recipe.html?id=${recipe.id}" class="recipe-link">View Recipe</a>
-    ` : 'No recipe found';
-  });
 }

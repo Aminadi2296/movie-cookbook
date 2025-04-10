@@ -1,43 +1,64 @@
 // src/js/api.js
 
-// Fetch recipes for a given query (used in genre page)
-export async function getRecipes(query, limit = 6) {
-  const url = `https://api.spoonacular.com/recipes/complexSearch?apiKey=${import.meta.env.VITE_SPOONACULAR_API_KEY}&query=${query}&number=${limit}`;
-  const response = await fetch(url);
-  return (await response.json()).results || [];
-}
-
-// Fetch movies by genre from IMDb (or use another API)
+// Fetch movies by genre from the server API
 export async function fetchMoviesByGenre(genre) {
-  const url = `https://imdb.iamidiotareyoutoo.com/search?q=${encodeURIComponent(genre)}`;
-
   console.log('Fetching movies for genre:', genre);  // Log genre
-  console.log('Request URL:', url);  // Log the URL being requested
+
+  // Construct the URL for fetching movies from the API
+  const url = `https://imdb.iamidiotareyoutoo.com/search?q=${encodeURIComponent(genre)}`;
 
   try {
     const response = await fetch(url);
 
+    // If the response isn't OK, throw an error
     if (!response.ok) {
       throw new Error(`Error: ${response.status}`);
     }
 
+    // Parse the JSON response
     const data = await response.json();
     console.log('Fetched data:', data);  // Log the raw data
 
-    // Return the results or an empty array if nothing is found
-    return data.results || [];
+    // Check if the 'description' field contains movie data
+    if (data.description && Array.isArray(data.description)) {
+      console.log('Movies found:', data.description);  // Log movies
+
+      // Map over the movie data and construct image URLs if needed
+      const movies = data.description.map(movie => {
+        // Ensure we check the actual field names from the API response
+        const title = movie['#TITLE'];  // Check if field names are correct
+        const imdbId = movie['#IMDB_ID'];  // Same for IMDB_ID
+        const year = movie['#YEAR'];  // Same for YEAR
+
+        // Construct the image URL (use placeholder if no IMDB ID exists)
+        const imageUrl = imdbId
+          ? `https://imdb.iamidiotareyoutoo.com/photo/${imdbId}`
+          : 'https://via.placeholder.com/300';  // Fallback image if no IMDb ID
+
+        // Return the movie data with proper properties
+        return {
+          title,
+          image: imageUrl,
+          year,
+          imdbId,
+        };
+      });
+
+      return movies;  // Return movies with image URLs
+    } else {
+      console.error('Movies data not found in the expected field.');
+      return [];  // Return an empty array if no movies found
+    }
   } catch (error) {
     console.error('Error fetching movies:', error);
-    throw error;  // Rethrow the error to be caught in the caller
+    return [];  // Return empty array if an error occurs
   }
 }
 
-
-// Fetch a recipe for a movie based on its title
+// Fetch a recipe for a movie based on its title (this part remains the same)
 export async function getRecipeForMovie(movieTitle) {
   const url = `https://api.spoonacular.com/recipes/complexSearch?apiKey=${import.meta.env.VITE_SPOONACULAR_API_KEY}&query=${movieTitle}`;
   const response = await fetch(url);
   const data = await response.json();
-  // Return the first recipe or null if none found
   return data.results && data.results[0] ? data.results[0] : null;
 }

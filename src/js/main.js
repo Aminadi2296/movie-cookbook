@@ -1,16 +1,19 @@
 // src/js/main.js
-import { initGenreNavigation } from './dynamicGenres.js';  // Import genre navigation logic
+import { initGenreNavigation } from './dynamicGenres.js';  // Genre navigation logic
 
-// Initialize genre navigation on the homepage (index.html)
-if (document.getElementById('genre-container')) {
-  initGenreNavigation();  // Initialize the genre cards on index.html
-}
+console.log('main.js loaded');
 
-// Load the genre page if we're on genre.html
-if (document.getElementById('movies-container')) {
-  document.addEventListener('DOMContentLoaded', () => {
+// Run when DOM is fully loaded
+document.addEventListener('DOMContentLoaded', () => {
+  if (document.getElementById('genre-container')) {
+    console.log('Initializing genre navigation');
+    initGenreNavigation();  // Homepage: set up genre links
+  }
+
+  if (document.getElementById('movies-container')) {
+    console.log('Loading genre page...');
     import('./genrePage.js').then(module => {
-      module.loadGenrePage();  // Dynamically load and call the genre page function
+      module.loadGenrePage();  // Genre page: load selected genre
     });
-  });
-}
+  }
+});
