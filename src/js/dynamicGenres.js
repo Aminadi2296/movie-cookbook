@@ -24,7 +24,7 @@ export function initGenreNavigation() {
   document.querySelectorAll('.genre-card').forEach(card => {
     card.addEventListener('click', () => {
       const genre = card.dataset.genre;
-      window.location.href = `/src/genre.html?type=${genre}`; // Redirect to genre page
+      window.location.href = `/genre.html?type=${genre}`; // Redirect to genre page
     });
   });
 }

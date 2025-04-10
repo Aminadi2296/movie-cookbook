@@ -1,14 +1,14 @@
-import { resolve } from "path";
+import { resolve } from "path"; 
 import { defineConfig } from "vite";
 
 export default defineConfig({
-  root: ".",  // Set root to the project root (this is default behavior, but making it explicit can help)
+  root: ".",  // Root is the project root (this is already the default)
   build: {
     outDir: "dist",
     rollupOptions: {
       input: {
-        main: resolve(__dirname, "index.html"),   // Main entry point for index.html
-        genre: resolve(__dirname, "src/genre.html"), // Explicitly define genre.html
+        main: resolve(__dirname, "index.html"),  // Main entry point for index.html
+        genre: resolve(__dirname, "genre.html"),  // Genre HTML now in the root directory
       },
     },
   },

@@ -1,5 +1,5 @@
 // src/js/main.js
-import { initGenreNavigation } from './dynamicGenres.js';  // Genre navigation logic
+import { initGenreNavigation } from './dynamicGenres.js';  // Import genre navigation logic
 
 // Initialize genre navigation on the homepage (index.html)
 if (document.getElementById('genre-container')) {
