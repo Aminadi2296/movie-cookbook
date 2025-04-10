@@ -1,4 +1,4 @@
-import { resolve } from "path"; 
+import { resolve } from "path";
 import { defineConfig } from "vite";
 
 export default defineConfig({
@@ -15,6 +15,16 @@ export default defineConfig({
   resolve: {
     alias: {
       '@': resolve(__dirname, 'src/js'),
+    },
+  },
+  server: {
+    proxy: {
+      // Proxy requests to Spoonacular API
+      '/api': {
+        target: 'https://api.spoonacular.com', // The Spoonacular API URL
+        changeOrigin: true,  // Make the request appear as coming from the same origin
+        rewrite: (path) => path.replace(/^\/api/, ''), // Remove /api from the request path
+      },
     },
   },
 });
