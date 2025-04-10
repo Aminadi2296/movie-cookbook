@@ -1,6 +1,33 @@
 console.log('genrePage.js loaded');  // Ensure the file is loading
 
-const apiKey = import.meta.env.VITE_SPOONACULAR_API_KEY;  // Use API key from .env
+const apiKey = import.meta.env.VITE_SPOONACULAR_API_KEY;
+
+// Helper to fetch recipes
+async function fetchRecipesForMovie(movieTitle) {
+  const apiUrl = `https://api.spoonacular.com/recipes/complexSearch?query=${encodeURIComponent(movieTitle)}&apiKey=${apiKey}`;
+
+  try {
+    const response = await fetch(apiUrl);
+    const data = await response.json();
+
+    console.log('Spoonacular Data:', data);
+    if (data.results && data.results.length > 0) {
+      return data.results.map(recipe => ({
+        title: recipe.title,
+        id: recipe.id,
+        url: `https://spoonacular.com/recipes/${recipe.title}-${recipe.id}`,
+        image: recipe.image,
+        instructions: recipe.instructions || 'No instructions available.'
+      }));
+    } else {
+      console.error(`No recipes found for: ${movieTitle}`);
+      return [];
+    }
+  } catch (error) {
+    console.error('Error fetching recipes data:', error);
+    return [];
+  }
+}
 
 export async function loadGenrePage() {
   console.log('loadGenrePage function is running');  // Check if the function is running
@@ -39,31 +66,43 @@ export async function loadGenrePage() {
       return;
     }
 
-    // Display the movies along with related recipes
-    const movieHTML = await Promise.all(movies.map(async (movie) => {
+    // Display movies that have recipes
+    const filteredMovies = await Promise.all(movies.map(async (movie) => {
       const recipes = await fetchRecipesForMovie(movie.title);  // Fetch recipes for the movie
-      console.log('Fetched Recipes:', recipes);
-      
-      return `
-        <div class="movie">
-          <h3>${movie.title} (${movie.year})</h3>
-          <img src="${movie.image}" alt="${movie.title}" />
-          ${recipes.length > 0 ? `
-            <h4>Recipes:</h4>
-            <ul>
+
+      // If the movie has at least one recipe, return the movie
+      if (recipes.length > 0) {
+        return `
+          <div class="movie">
+            <h3>${movie.title} (${movie.year})</h3>
+            <img src="${movie.image}" alt="${movie.title}" />
+            <button class="show-recipes" data-recipes="${JSON.stringify(recipes)}">Show Recipes</button>
+            <div class="recipes" style="display: none;">
               ${recipes.map(recipe => `
-                <li>
-                  <a href="${recipe.url}" target="_blank">${recipe.title}</a>
-                </li>
+                <div class="recipe">
+                  <h4>${recipe.title}</h4>
+                  <img src="${recipe.image}" alt="${recipe.title}" />
+                  <p><strong>Instructions:</strong> ${recipe.instructions}</p>
+                  <a href="${recipe.url}" target="_blank">View Recipe</a>
+                </div>
               `).join('')}
-            </ul>
-          ` : '<p>No recipes found for this movie.</p>'}
-        </div>
-      `;
+            </div>
+          </div>
+        `;
+      }
+      return null;
     }));
 
-    // Once the promises have resolved, join the results and display them
-    moviesContainer.innerHTML = movieHTML.join('');
+    // Filter out null movies (movies without recipes)
+    moviesContainer.innerHTML = filteredMovies.filter(Boolean).join('');
+    
+    // Add event listeners to toggle the recipe display
+    document.querySelectorAll('.show-recipes').forEach(button => {
+      button.addEventListener('click', (e) => {
+        const recipesContainer = e.target.nextElementSibling;
+        recipesContainer.style.display = recipesContainer.style.display === 'none' ? 'block' : 'none';
+      });
+    });
 
   } catch (error) {
     console.error('Error loading genre page:', error);
@@ -90,30 +129,6 @@ async function fetchMoviesByGenre(genre) {
     }
   } catch (error) {
     console.error('Error fetching movies from API:', error);
-    return [];
-  }
-}
-
-// Fetch recipes for a movie from the Spoonacular API
-async function fetchRecipesForMovie(movieTitle) {
-  const apiUrl = `https://api.spoonacular.com/recipes/complexSearch?query=${encodeURIComponent(movieTitle)}&apiKey=${apiKey}`;  // Use the API key from env
-
-  try {
-    const response = await fetch(apiUrl);
-    const data = await response.json();
-
-    console.log('Spoonacular Data:', data);
-    if (data.results && data.results.length > 0) {
-      return data.results.map(recipe => ({
-        title: recipe.title,
-        url: `https://spoonacular.com/recipes/${recipe.title}-${recipe.id}`,
-      }));
-    } else {
-      console.error(`No recipes found for: ${movieTitle}`);
-      return [];
-    }
-  } catch (error) {
-    console.error('Error fetching recipes data:', error);
     return [];
   }
 }
