@@ -1,5 +1,7 @@
-// src/js/main.js
 import { initGenreNavigation } from './dynamicGenres.js';  // Genre navigation logic
+import { loadPartials } from './utils.js';  // Load the header/footer dynamically
+
+loadPartials();  // Load the header and footer dynamically
 
 console.log('main.js loaded');
 
