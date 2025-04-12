@@ -1,7 +1,12 @@
-/* Add this to your main.css */
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+
 @font-face {
   font-family: 'Kollektif';
-  src: url('/src/assets/fonts/Kollektif.ttf') format('truetype');
+  src: url('/assets/fonts/Kollektif.ttf') format('truetype');
   font-weight: normal;
   font-style: normal;
 }
@@ -17,18 +22,19 @@ body {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
+  font-family: 'Kollektif', cursive;
+}
+
+p {
+  font-family: 'Merriweather', serif;
+  font-size: 1rem;
+  line-height: 1.6;
 }
 
 main {
   flex: 1; /* This pushes the footer down */
 }
 
-* {
-  padding: 0;
-  margin: 0;
-  box-sizing: border-box;
-  font-family: 'Arial', sans-serif;
-}
 nav {
   background: #f8f8f8;
   width: 100%;
@@ -73,7 +79,11 @@ nav img {
   background-color: #ececec;
 }
 
-/* Basic layout */
+.genre-card h2 {
+  font-size: 3rem;
+  color: white;
+}
+
 #movies-container {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
