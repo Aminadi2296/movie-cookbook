@@ -1,134 +1,103 @@
-console.log('genrePage.js loaded');  // Ensure the file is loading
+console.log('genrePage.js loaded');
+import moviesWithDishes from '../data/moviesWithDishes.json';
 
 const apiKey = import.meta.env.VITE_SPOONACULAR_API_KEY;
 
-// Helper to fetch recipes
-async function fetchRecipesForMovie(movieTitle) {
-  const apiUrl = `https://api.spoonacular.com/recipes/complexSearch?query=${encodeURIComponent(movieTitle)}&apiKey=${apiKey}`;
+// Fetch recipes based on dish name
+async function fetchRecipesForDish(dishName) {
+  const apiUrl = `https://api.spoonacular.com/recipes/complexSearch?query=${encodeURIComponent(dishName)}&addRecipeInformation=true&number=3&apiKey=${apiKey}`;
 
   try {
     const response = await fetch(apiUrl);
     const data = await response.json();
+    console.log(`Recipes for ${dishName}:`, data);
 
-    console.log('Spoonacular Data:', data);
     if (data.results && data.results.length > 0) {
       return data.results.map(recipe => ({
         title: recipe.title,
         id: recipe.id,
-        url: `https://spoonacular.com/recipes/${recipe.title}-${recipe.id}`,
+        url: `https://spoonacular.com/recipes/${recipe.title.replace(/ /g, "-")}-${recipe.id}`,
         image: recipe.image,
         instructions: recipe.instructions || 'No instructions available.'
       }));
     } else {
-      console.error(`No recipes found for: ${movieTitle}`);
+      console.warn(`No recipes found for dish: ${dishName}`);
       return [];
     }
   } catch (error) {
-    console.error('Error fetching recipes data:', error);
+    console.error('Error fetching recipes:', error);
     return [];
   }
 }
 
 export async function loadGenrePage() {
-  console.log('loadGenrePage function is running');  // Check if the function is running
+  console.log('loadGenrePage function is running');
 
-  try {
-    // Get the genre from the URL (for example, ?type=action)
-    const genre = new URLSearchParams(window.location.search).get('type');
-    console.log('Selected Genre:', genre);  // Check the selected genre
+  const genre = new URLSearchParams(window.location.search).get('type');
+  console.log('Selected Genre:', genre);
 
-    if (!genre) {
-      console.error('No genre found in URL');
-      return window.location.href = '/';  // Redirect if no genre found
-    }
+  if (!genre) {
+    console.error('No genre found in URL');
+    window.location.href = '/';
+    return;
+  }
 
-    // Check if the page-title element exists and update the content
-    const pageTitleElement = document.getElementById('page-title');
-    if (pageTitleElement) {
-      console.log('Page title element found:', pageTitleElement);  // Ensure the element exists
-      pageTitleElement.textContent = `${genre.charAt(0).toUpperCase() + genre.slice(1)} Movies`;  // Update title
-    } else {
-      console.error('Page title element not found!');
-    }
+  // Update page title
+  const pageTitleElement = document.getElementById('page-title');
+  if (pageTitleElement) {
+    pageTitleElement.textContent = `${genre.charAt(0).toUpperCase() + genre.slice(1)} Movies`;
+  }
+  document.title = `${genre.charAt(0).toUpperCase() + genre.slice(1)} Movies`;
 
-    // Dynamically update the browser tab title as well
-    document.title = `${genre.charAt(0).toUpperCase() + genre.slice(1)} Movies`;
-    console.log('Browser tab title updated to:', document.title);  // Log the new tab title
+  const moviesContainer = document.getElementById('movies-container');
+  moviesContainer.innerHTML = '<p>Loading movies...</p>';
 
-    // Fetch movies for the genre (make sure api.js is working correctly)
-    const movies = await fetchMoviesByGenre(genre);  // Using the existing fetch function
-    console.log('Fetched Movies:', movies);
+  // Get movies from the local JSON by genre
+  const genreMovies = moviesWithDishes[genre];
+  if (!genreMovies || genreMovies.length === 0) {
+    moviesContainer.innerHTML = '<p>No movies found for this genre.</p>';
+    return;
+  }
 
-    // If no movies are found, display a message
-    const moviesContainer = document.getElementById('movies-container');
-    if (movies.length === 0) {
-      moviesContainer.innerHTML = 'No movies found for this genre.';
-      return;
-    }
+  const moviesWithRecipes = [];
 
-    // Display movies that have recipes
-    const filteredMovies = await Promise.all(movies.map(async (movie) => {
-      const recipes = await fetchRecipesForMovie(movie.title);  // Fetch recipes for the movie
+  for (const movie of genreMovies) {
+    const recipes = await fetchRecipesForDish(movie.dish);
 
-      // If the movie has at least one recipe, return the movie
-      if (recipes.length > 0) {
-        return `
-          <div class="movie">
-            <h3>${movie.title} (${movie.year})</h3>
-            <img src="${movie.image}" alt="${movie.title}" />
-            <button class="show-recipes" data-recipes="${JSON.stringify(recipes)}">Show Recipes</button>
-            <div class="recipes" style="display: none;">
-              ${recipes.map(recipe => `
-                <div class="recipe">
-                  <h4>${recipe.title}</h4>
-                  <img src="${recipe.image}" alt="${recipe.title}" />
-                  <p><strong>Instructions:</strong> ${recipe.instructions}</p>
-                  <a href="${recipe.url}" target="_blank">View Recipe</a>
-                </div>
-              `).join('')}
-            </div>
+    if (recipes.length > 0) {
+      moviesWithRecipes.push(`
+        <div class="movie">
+          <h3>${movie.title} (${movie.year})</h3>
+          <img src="${movie.image}" alt="${movie.title}" />
+          <button class="show-recipes" data-recipes='${JSON.stringify(recipes)}'>Show Recipes</button>
+          <div class="recipes" style="display: none;">
+            ${recipes.map(recipe => `
+              <div class="recipe">
+                <h4>${recipe.title}</h4>
+                <img src="${recipe.image}" alt="${recipe.title}" />
+                <p><strong>Instructions:</strong> ${recipe.instructions}</p>
+                <a href="${recipe.url}" target="_blank">View Full Recipe</a>
+              </div>
+            `).join('')}
           </div>
-        `;
-      }
-      return null;
-    }));
-
-    // Filter out null movies (movies without recipes)
-    moviesContainer.innerHTML = filteredMovies.filter(Boolean).join('');
-    
-    // Add event listeners to toggle the recipe display
-    document.querySelectorAll('.show-recipes').forEach(button => {
-      button.addEventListener('click', (e) => {
-        const recipesContainer = e.target.nextElementSibling;
-        recipesContainer.style.display = recipesContainer.style.display === 'none' ? 'block' : 'none';
-      });
-    });
-
-  } catch (error) {
-    console.error('Error loading genre page:', error);
-  }
-}
-
-// Fetch movies by genre from the API
-async function fetchMoviesByGenre(genre) {
-  const apiUrl = `https://imdb.iamidiotareyoutoo.com/search?q=${genre}`;
-  try {
-    const response = await fetch(apiUrl);
-    const data = await response.json();
-
-    if (data.ok && Array.isArray(data.description)) {
-      return data.description.map(item => ({
-        title: item['#TITLE'] || 'No Title',
-        image: item['#IMG_POSTER'] || 'path/to/fallback-image.jpg',
-        year: item['#YEAR'] || 'No Year',
-        imdbId: item['#IMDB_ID']
-      }));
+        </div>
+      `);
     } else {
-      console.error('Error fetching movie data:', data.error_code);
-      return [];
+      console.log(`Skipping "${movie.title}" – no recipes found.`);
     }
-  } catch (error) {
-    console.error('Error fetching movies from API:', error);
-    return [];
   }
+
+  if (moviesWithRecipes.length > 0) {
+    moviesContainer.innerHTML = moviesWithRecipes.join('');
+  } else {
+    moviesContainer.innerHTML = '<p>No movies with matching recipes found.</p>';
+  }
+
+  // Add show/hide toggle
+  document.querySelectorAll('.show-recipes').forEach(button => {
+    button.addEventListener('click', (e) => {
+      const recipesContainer = e.target.nextElementSibling;
+      recipesContainer.style.display = recipesContainer.style.display === 'none' ? 'block' : 'none';
+    });
+  });
 }
