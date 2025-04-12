@@ -229,5 +229,15 @@ footer {
 @media (max-width: 768px) {
   #genre-container {
     grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+  }
+
+  .genre-card {
+    padding: 1rem;
+    height: 14em;
+  }
+
+  .genre-card h2 {
+    font-size: 1.8rem;
   }
 }
