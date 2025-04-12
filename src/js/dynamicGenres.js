@@ -12,13 +12,11 @@ export function initGenreNavigation() {
 
   // Dynamically generate genre cards
   container.innerHTML = GENRES.map(genre => `
-    <div class="genre-card" 
-         style="background: ${genre.color}"
-         data-genre="${genre.id}">
-      <h2>${genre.name}</h2>
-      <p>View recipes</p>
-    </div>
-  `).join('');
+    <div class="genre-card ${genre.id}" data-genre="${genre.id}">
+    <h2>${genre.name}</h2>
+    <p>View recipes</p>
+  </div>
+`).join('');
 
   // Add event listeners to each genre card
   document.querySelectorAll('.genre-card').forEach(card => {
