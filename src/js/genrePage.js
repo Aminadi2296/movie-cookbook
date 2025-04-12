@@ -52,7 +52,7 @@ export async function loadGenrePage() {
   const moviesContainer = document.getElementById('movies-container');
   moviesContainer.innerHTML = '<p>Loading movies...</p>';
 
-  // Get movies from the local JSON by genre
+  // Get movies from local JSON
   const genreMovies = moviesWithDishes[genre];
   if (!genreMovies || genreMovies.length === 0) {
     moviesContainer.innerHTML = '<p>No movies found for this genre.</p>';
@@ -65,10 +65,12 @@ export async function loadGenrePage() {
     const recipes = await fetchRecipesForDish(movie.dish);
 
     if (recipes.length > 0) {
+      const posterUrl = `https://imdb.iamidiotareyoutoo.com/photo/${movie.imdbId}`;
+
       moviesWithRecipes.push(`
         <div class="movie">
           <h3>${movie.title} (${movie.year})</h3>
-          <img src="${movie.image}" alt="${movie.title}" />
+          <img src="${posterUrl}" alt="${movie.title}" class="movie-poster" />
           <button class="show-recipes" data-recipes='${JSON.stringify(recipes)}'>Show Recipes</button>
           <div class="recipes" style="display: none;">
             ${recipes.map(recipe => `
