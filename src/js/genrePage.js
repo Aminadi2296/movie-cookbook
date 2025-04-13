@@ -1,9 +1,7 @@
-console.log('genrePage.js loaded');
 import moviesWithDishes from '../data/moviesWithDishes.json';
 
 const apiKey = import.meta.env.VITE_SPOONACULAR_API_KEY;
 
-// Fetch recipes based on dish name
 async function fetchRecipesForDish(dishName) {
   const apiUrl = `https://api.spoonacular.com/recipes/complexSearch?query=${encodeURIComponent(dishName)}&addRecipeInformation=true&number=3&apiKey=${apiKey}`;
 
@@ -95,7 +93,6 @@ export async function loadGenrePage() {
     moviesContainer.innerHTML = '<p>No movies with matching recipes found.</p>';
   }
 
-  // Add show/hide toggle
   document.querySelectorAll('.show-recipes').forEach(button => {
     button.addEventListener('click', (e) => {
       const recipesContainer = e.target.nextElementSibling;
