@@ -1,7 +1,7 @@
 import moviesWithDishes from '../data/moviesWithDishes.json';
-
 const apiKey = import.meta.env.VITE_SPOONACULAR_API_KEY;
 
+// Fetch recipes based on dish name
 async function fetchRecipesForDish(dishName) {
   const apiUrl = `https://api.spoonacular.com/recipes/complexSearch?query=${encodeURIComponent(dishName)}&addRecipeInformation=true&number=3&apiKey=${apiKey}`;
 
@@ -75,8 +75,12 @@ export async function loadGenrePage() {
               <div class="recipe">
                 <h4>${recipe.title}</h4>
                 <img src="${recipe.image}" alt="${recipe.title}" />
-                <p><strong>Instructions:</strong> ${recipe.instructions}</p>
+                <div class="instructions">
+                  <strong>Instructions:</strong> 
+                  <p>${recipe.instructions}</p>
+                </div>
                 <a href="${recipe.url}" target="_blank">View Full Recipe</a>
+                <button class="save-to-favorites" data-id="${recipe.id}" data-title="${recipe.title}" data-image="${recipe.image}" data-url="${recipe.url}">Save to Favorites</button>
               </div>
             `).join('')}
           </div>
@@ -93,10 +97,35 @@ export async function loadGenrePage() {
     moviesContainer.innerHTML = '<p>No movies with matching recipes found.</p>';
   }
 
+  // Add show/hide toggle
   document.querySelectorAll('.show-recipes').forEach(button => {
     button.addEventListener('click', (e) => {
       const recipesContainer = e.target.nextElementSibling;
       recipesContainer.style.display = recipesContainer.style.display === 'none' ? 'block' : 'none';
+    });
+  });
+
+  // Add "Save to Favorites" button functionality
+  document.querySelectorAll('.save-to-favorites').forEach(button => {
+    button.addEventListener('click', (e) => {
+      const recipe = {
+        id: e.target.dataset.id,
+        title: e.target.dataset.title,
+        image: e.target.dataset.image,
+        url: e.target.dataset.url
+      };
+
+      // Get existing favorites from localStorage
+      const favorites = JSON.parse(localStorage.getItem('favorites')) || [];
+
+      // Add the new recipe to the favorites array if it doesn't already exist
+      if (!favorites.some(fav => fav.id === recipe.id)) {
+        favorites.push(recipe);
+        localStorage.setItem('favorites', JSON.stringify(favorites));
+        alert(`${recipe.title} has been added to your favorites!`);
+      } else {
+        alert(`${recipe.title} is already in your favorites.`);
+      }
     });
   });
 }

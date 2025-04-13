@@ -47,6 +47,11 @@ nav img {
   height: auto;
 }
 
+.cart-link img {
+  width: 35px;
+  height: auto;
+}
+
 .main-content {
   flex: 1;
   display: flex;
@@ -162,7 +167,7 @@ nav img {
 
 .movie button {
   font-family: 'Kollektif';
-  font-size: 2rem;
+  font-size: 1.2rem;
   background-color: #5c6bc0;
   color: white;
   border: none;
@@ -219,6 +224,85 @@ footer {
   margin-top: auto;
 }
 
+.save-recipe-btn {
+  background-color: #ff4081;
+  color: white;
+  border: none;
+  padding: 0.4rem 0.8rem;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-top: 0.5rem;
+}
+
+.save-recipe-btn:hover {
+  background-color: #e91e63;
+}
+
+/* === Favorites Page Styles === */
+.favorites-page {
+  padding: 2rem;
+}
+
+#favorites-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 1.5rem;
+  margin-top: 1rem;
+}
+
+.favorite-recipe {
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  padding: 1rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.07);
+  text-align: center;
+  transition: transform 0.2s ease;
+}
+
+.favorite-recipe:hover {
+  transform: scale(1.03);
+}
+
+.favorite-recipe img {
+  width: 100%;
+  max-height: 180px;
+  object-fit: cover;
+  border-radius: 6px;
+  margin-bottom: 0.8rem;
+}
+
+.favorite-recipe h3 {
+  font-size: 1.1rem;
+  margin-bottom: 0.5rem;
+}
+
+.favorite-recipe a {
+  display: inline-block;
+  margin: 0.3rem 0;
+  font-size: 0.9rem;
+  color: #5c6bc0;
+  text-decoration: none;
+}
+
+.favorite-recipe a:hover {
+  text-decoration: underline;
+}
+
+.remove-favorite {
+  background-color: #e53935;
+  color: white;
+  border: none;
+  padding: 0.4rem 0.8rem;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-top: 0.5rem;
+}
+
+.remove-favorite:hover {
+  background-color: #c62828;
+}
+
 @media (max-width: 768px) {
   #genre-container {
     grid-template-columns: repeat(2, 1fr);
@@ -232,5 +316,18 @@ footer {
 
   .genre-card h2 {
     font-size: 1.8rem;
+  }
+
+  #favorites-container {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .favorite-recipe {
+    padding: 1rem;
+  }
+
+  .favorite-recipe img {
+    max-height: 150px;
   }
 }
