@@ -67,9 +67,13 @@ export async function loadGenrePage() {
 
       moviesWithRecipes.push(`
         <div class="movie">
-          <h3>${movie.title} (${movie.year})</h3>
           <img src="${posterUrl}" alt="${movie.title}" class="movie-poster" />
-          <button class="show-recipes" data-recipes='${JSON.stringify(recipes)}'>Show Recipes</button>
+          
+          <div class="movie-content">
+            <h3>${movie.title} (${movie.year})</h3>
+            <button class="show-recipes" data-recipes='${JSON.stringify(recipes)}'>Show Recipes</button>
+          </div>
+      
           <div class="recipes" style="display: none;">
             ${recipes.map(recipe => `
               <div class="recipe">

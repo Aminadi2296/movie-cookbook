@@ -140,45 +140,51 @@ nav img {
 }
 
 .movie {
-  background: #fdfdfd;
+  display: flex; /* Set horizontal layout */
+  flex-direction: row; /* Ensure items go side by side */
+  background: white; /* change from red to a cleaner background if needed */
   border: 1px solid #ddd;
   border-radius: 8px;
-  padding: 1rem;
   box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.05);
-  transition: transform 0.2s ease;
-  align-items: center;
+  width: 100%;
+  height: 12em;
+  overflow: hidden;
 }
 
-.movie:hover {
-  transform: scale(1.02);
+/* Left side image */
+.movie img {
+  height: 100%;
+  width: auto;
+  object-fit: cover;
+  border-radius: 8px 0 0 8px;
+  margin: 0;
+}
+
+/* Right side content */
+.movie-content {
+  display: flex;
+  flex-direction: column; /* Stack title and button vertically */
+  justify-content: flex-start; /* Align to top */
+  padding: 1rem;
+  flex: 1;
 }
 
 .movie h3 {
-  font-size: 1.1rem;
-  margin-bottom: 0.5rem;
-}
-
-.movie img {
-  width: 100%;
-  height: auto;
-  border-radius: 4px;
-  margin-bottom: 0.5rem;
+  font-size: 1.2rem;
+  margin: 0 0 0.5rem 0;
+  padding: 0 3em;
 }
 
 .movie button {
-  font-family: 'Kollektif';
-  font-size: 1.2rem;
+  font-family: 'Kollektif', sans-serif;
+  font-size: 1rem;
   background-color: #5c6bc0;
   color: white;
   border: none;
-  padding: 1rem 0.8rem;
+  padding: 0.5rem 1rem;
   border-radius: 4px;
   cursor: pointer;
-  margin-bottom: 0.5rem;
-}
-
-.movie button:hover {
-  background-color: #3f51b5;
+  align-self: flex-start;
 }
 
 .recipes {
