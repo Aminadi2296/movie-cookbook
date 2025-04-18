@@ -104,8 +104,11 @@ export async function loadGenrePage() {
   // Add show/hide toggle
   document.querySelectorAll('.show-recipes').forEach(button => {
     button.addEventListener('click', (e) => {
-      const recipesContainer = e.target.nextElementSibling;
-      recipesContainer.style.display = recipesContainer.style.display === 'none' ? 'block' : 'none';
+      const movieCard = e.target.closest('.movie');
+      const recipesContainer = movieCard.querySelector('.recipes');
+      if (recipesContainer) {
+        recipesContainer.style.display = recipesContainer.style.display === 'none' ? 'block' : 'none';
+      }
     });
   });
 
