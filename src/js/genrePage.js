@@ -71,7 +71,7 @@ export async function loadGenrePage() {
           
           <div class="movie-content">
             <h3>${movie.title} (${movie.year})</h3>
-            <button class="show-recipes" data-recipes='${JSON.stringify(recipes)}'>Show Recipes</button>
+            <a href="movie.html?id=${movie.imdbId}" class="view-recipes-btn">View Recipes</a>
           </div>
       
           <div class="recipes" style="display: none;">
