@@ -7,6 +7,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function renderFavorites() {
     const favorites = JSON.parse(localStorage.getItem('favorites')) || [];
+    console.log('Favorites from localStorage:', favorites);
 
     if (favorites.length === 0) {
       favoritesList.innerHTML = '<p>No favorite recipes yet. Add some from the genre pages!</p>';
@@ -19,7 +20,7 @@ document.addEventListener('DOMContentLoaded', () => {
         <div class="recipe-details">
           <h3>${recipe.title}</h3>
           <div class="button-group">
-            <a href="${recipe.url}" target="_blank">View Recipe</a>
+            <a href="${recipe.sourceUrl}" target="_blank">View Recipe</a>
             <button class="remove-favorite" data-id="${String(recipe.id)}">Remove</button>
           </div>
         </div>
