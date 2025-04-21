@@ -230,8 +230,8 @@ h2.dish-title {
 
 .recipe {
   display: flex;
-  flex-direction: column; /* Stack title and button vertically */
-  justify-content: space-between; /* Align to top */
+  flex-direction: column;
+  justify-content: space-between;
   padding: 1rem;
   flex: 1;
 }
@@ -299,6 +299,64 @@ footer {
 
 .save-recipe-btn:hover {
   background-color: #e91e63;
+}
+
+.recipe-section {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  padding: 2rem;
+}
+
+.recipe-card {
+  background-color: #f9f9f9;
+  border-radius: 16px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  padding: 1.5rem;
+}
+
+.recipe-card h2 {
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+  color: #444;
+  border-left: 6px solid #ffa500;
+  padding-left: 1rem;
+}
+
+.recipe {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.recipe h3 {
+  width: 100%;
+  font-size: 1.2rem;
+  margin: 0;
+  color: #333;
+}
+
+.recipe img {
+  max-width: 200px;
+  border-radius: 12px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+.recipe a {
+  margin-top: 0.5rem;
+  display: inline-block;
+  background-color: #ffa500;
+  color: white;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  text-decoration: none;
+  transition: background-color 0.3s ease;
+}
+
+.recipe a:hover {
+  background-color: #ff8c00;
 }
 
 /* === Favorites Page Styles === */

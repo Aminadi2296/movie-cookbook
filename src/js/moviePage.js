@@ -1,34 +1,31 @@
 // src/js/moviePage.js
 
-import { getRecipeForMovie } from './api.js';  // Import the function for fetching recipes
-import moviesData from '../data/moviesWithDishes.json';  // Import your JSON data
+import { getRecipeForMovie } from './api.js';
+import moviesData from '../data/moviesWithDishes.json';
 
 // Function to fetch movie details by IMDb ID
 async function fetchMovieDetails(imdbId) {
-  // Find the movie in the JSON data based on IMDb ID
   const movie = Object.values(moviesData).flat().find(m => m.imdbId === imdbId);
-  
+
   if (movie) {
     const { title, year, dish } = movie;
-    
+
     // Set the movie title
-    document.getElementById('movie-title').innerText = `${title} (${year})`;
+    document.getElementById('movie-title').innerText = `${title} Recipes`;
 
-    // Fetch recipe for the movie
-    const recipe = await getRecipeForMovie(dish);
+    // Fetch multiple recipes (you can increase the number if your API allows)
+    const recipes = await getRecipeForMovie(dish, 3);
 
-    if (recipe) {
-      // Inject the recipe details into the page
-      const recipeSection = document.getElementById('movie-container');
-      recipeSection.innerHTML = `
-        <h2>Recipe: ${dish}</h2>
-        <img src="${recipe.image}" alt="${dish}" />
-        <p>${recipe.title}</p>
-        <a href="${recipe.sourceUrl}" target="_blank">View full recipe</a>
-      `;
+    const container = document.getElementById('movie-container');
+    container.innerHTML = '';
+
+    if (recipes && recipes.length > 0) {
+      recipes.forEach(recipe => {
+        const card = createRecipeCard(recipe);
+        container.appendChild(card);
+      });
     } else {
-      // Handle case where no recipe was found
-      document.getElementById('movie-container').innerHTML = `<p>No recipe found for this movie.</p>`;
+      container.innerHTML = `<p>No recipe found for this movie.</p>`;
     }
   } else {
     document.getElementById('movie-title').innerText = 'Movie not found';
@@ -36,7 +33,41 @@ async function fetchMovieDetails(imdbId) {
   }
 }
 
-// Load the movie page by fetching movie details
+// Create a recipe card with Save to Favorites button
+function createRecipeCard(recipe) {
+  const card = document.createElement('div');
+  card.classList.add('recipe-card');
+
+  card.innerHTML = `
+    <h2>${recipe.title}</h2>
+    <img src="${recipe.image}" alt="${recipe.title}" />
+    <p><a href="${recipe.sourceUrl}" target="_blank">View full recipe</a></p>
+    <button class="save-favorite-btn">Save to Favorites</button>
+  `;
+
+  card.querySelector('.save-favorite-btn').addEventListener('click', () => {
+    saveRecipeToFavorites(recipe);
+  });
+
+  return card;
+}
+
+// Save recipe to localStorage
+function saveRecipeToFavorites(recipe) {
+  let favorites = JSON.parse(localStorage.getItem('favorites')) || [];
+
+  const exists = favorites.some(fav => fav.id === recipe.id);
+  if (exists) {
+    alert('Recipe already saved!');
+    return;
+  }
+
+  favorites.push(recipe);
+  localStorage.setItem('favorites', JSON.stringify(favorites));
+  alert('Recipe saved to favorites!');
+}
+
+// Entry point
 export function loadMoviePage() {
   const urlParams = new URLSearchParams(window.location.search);
   const imdbId = urlParams.get('id');
