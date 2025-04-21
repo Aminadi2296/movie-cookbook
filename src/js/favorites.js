@@ -18,9 +18,13 @@ document.addEventListener('DOMContentLoaded', () => {
     favoritesList.innerHTML = favorites.map(recipe => `
       <div class="favorite-recipe">
         <img src="${recipe.image}" alt="${recipe.title}" />
+        <div class="recipe-details">
         <h3>${recipe.title}</h3>
-        <a href="${recipe.url}" target="_blank">View Full Recipe</a>
+        <div class="button-group">
+        <a href="${recipe.url}" target="_blank">View Recipe</a>
         <button class="remove-favorite" data-id="${recipe.id}">Remove</button>
+        </div>
+        </div>
       </div>
     `).join('');
 

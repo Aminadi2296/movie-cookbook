@@ -279,6 +279,9 @@ h2.dish-title {
 }
 
 footer {
+  /* text-transform: uppercase;
+  font-weight: bold;
+  font-family: 'Kollektif', sans-serif; */
   background-color: #1c1c1c;
   color: #f8f8f8;
   text-align: center;
@@ -361,7 +364,8 @@ footer {
 
 /* === Favorites Page Styles === */
 .favorites-page {
-  padding: 2rem;
+  padding: 3rem;
+  /* background: red; */
 }
 
 #favorites-container {
@@ -372,52 +376,68 @@ footer {
 }
 
 .favorite-recipe {
-  background-color: #fff;
-  border: 1px solid #ddd;
+  display: flex;
+  flex-direction: row;
+  align-items: stretch; /* Makes both sides equal height */
   border-radius: 10px;
-  padding: 1rem;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.07);
-  text-align: center;
-  transition: transform 0.2s ease;
-}
-
-.favorite-recipe:hover {
-  transform: scale(1.03);
+  background-color: f8f8f8;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  height: 10em;
 }
 
 .favorite-recipe img {
-  width: 100%;
-  max-height: 180px;
+  width: 9em;
   object-fit: cover;
-  border-radius: 6px;
-  margin-bottom: 0.8rem;
+  height: 100%; /* Fills entire height of the card */
+  flex-shrink: 0;
+}
+
+.recipe-details {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between; /* Push title to top, buttons to bottom */
+  flex: 1;
+  padding: 1.5em;
 }
 
 .favorite-recipe h3 {
-  font-size: 1.1rem;
-  margin-bottom: 0.5rem;
+  font-size: 1.2rem;
+  margin: 0 0 0.5rem 0;
+}
+
+.button-group {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 0.8rem;
+  flex-wrap: wrap; /* Optional: wraps buttons on small screens */
 }
 
 .favorite-recipe a {
-  display: inline-block;
-  margin: 0.3rem 0;
-  font-size: 0.9rem;
-  color: #5c6bc0;
+  background-color: #5c6bc0;
+  color: white;
+  border: none;
+  padding: 0.4rem 0.8rem;
+  border-radius: 4px;
+  cursor: pointer;
+  width: fit-content;
   text-decoration: none;
 }
 
 .favorite-recipe a:hover {
-  text-decoration: underline;
+  background-color: #4a569b;
 }
 
 .remove-favorite {
+  font-family: 'Kollektif', sans-serif;
+  font-size: 1rem;
   background-color: #e53935;
   color: white;
   border: none;
   padding: 0.4rem 0.8rem;
   border-radius: 4px;
   cursor: pointer;
-  margin-top: 0.5rem;
+  width: fit-content;
 }
 
 .remove-favorite:hover {
@@ -444,11 +464,11 @@ footer {
     gap: 1rem;
   }
 
-  .favorite-recipe {
-    padding: 1rem;
+  .favorite-recipe .recipe-info {
+    padding: 4em 0;
   }
 
   .favorite-recipe img {
-    max-height: 150px;
+    max-width: 100px;
   }
 }
