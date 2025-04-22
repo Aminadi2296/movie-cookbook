@@ -413,7 +413,9 @@ footer {
   flex-wrap: wrap; /* Optional: wraps buttons on small screens */
 }
 
-.favorite-recipe a {
+.favorite-recipe a,
+.view-recipes-btn,
+.save-favorite-btn {
   background-color: #5c6bc0;
   color: white;
   border: none;
