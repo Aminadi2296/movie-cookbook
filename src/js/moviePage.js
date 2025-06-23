@@ -36,13 +36,17 @@ async function fetchMovieDetails(imdbId) {
 // Create a recipe card with Save to Favorites button
 function createRecipeCard(recipe) {
   const card = document.createElement('div');
-  card.classList.add('recipe-card');
+  card.classList.add('favorite-recipe');
 
   card.innerHTML = `
-    <h2>${recipe.title}</h2>
     <img src="${recipe.image}" alt="${recipe.title}" />
-    <p><a href="${recipe.sourceUrl}" target="_blank">View full recipe</a></p>
-    <button class="save-favorite-btn">Save to Favorites</button>
+    <div class="recipe-details">
+      <h3>${recipe.title}</h3>
+      <div class="button-group">
+        <a href="${recipe.sourceUrl}" target="_blank">View full recipe</a>
+        <button class="save-favorite-btn">Add to Favorites</button>
+      </div>
+    </div>
   `;
 
   card.querySelector('.save-favorite-btn').addEventListener('click', () => {
@@ -51,6 +55,7 @@ function createRecipeCard(recipe) {
 
   return card;
 }
+
 
 // Save recipe to localStorage
 function saveRecipeToFavorites(recipe) {

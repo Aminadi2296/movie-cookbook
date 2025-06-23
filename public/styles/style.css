@@ -22,7 +22,6 @@ body {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
-  font-family: 'Kollektif', cursive;
 }
 
 p {
@@ -136,13 +135,13 @@ nav img {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
   gap: 1.5rem;
-  padding: 2rem;
+  padding: 1rem;
 }
 
 .movie {
-  display: flex; /* Set horizontal layout */
-  flex-direction: row; /* Ensure items go side by side */
-  background: white; /* change from red to a cleaner background if needed */
+  display: flex; 
+  flex-direction: row;
+  background: white; 
   border: 1px solid #ddd;
   border-radius: 8px;
   box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.05);
@@ -163,8 +162,8 @@ nav img {
 /* Right side content */
 .movie-content {
   display: flex;
-  flex-direction: column; /* Stack title and button vertically */
-  justify-content: space-between; /* Align to top */
+  flex-direction: column;
+  justify-content: space-between;
   padding: 1rem;
   flex: 1;
 }
@@ -200,7 +199,7 @@ nav img {
 
 .movie-poster {
   width: 100%;
-  max-width: 300px; /* Adjust the size of the poster */
+  max-width: 300px; 
   height: auto;
   margin-bottom: 1.5rem;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
@@ -243,19 +242,43 @@ h2.dish-title {
 }
 
 .recipe-card {
-  background-color: #f9f9f9;
-  border-radius: 16px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  padding: 1.5rem;
-  width: 20em;
+  border: 1px solid #ccc;
+  border-radius: 12px;
+  padding: 16px;
+  max-width: 600px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  margin-bottom: 20px;
+  background-color: #fff;
 }
 
-.recipe-card h2 {
+.recipe-title {
+  text-align: center;
   font-size: 1.5rem;
-  margin-bottom: 1rem;
-  color: #444;
-  border-left: 6px solid #ffa500;
-  padding-left: 1rem;
+  margin-bottom: 12px;
+}
+
+.recipe-content {
+  display: flex;
+  height: 200px;
+  gap: 16px;
+}
+
+.recipe-image {
+  width: 40%;
+  height: 100%;
+  border-radius: 8px;
+  object-fit: cover;
+}
+
+.recipe-details {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: flex-end;
+  gap: 10px;
+  padding: 8px 0;
+  text-align: right;
 }
 
 .recipe {
@@ -296,26 +319,29 @@ h2.dish-title {
 
 /* === Favorites Page Styles === */
 .favorites-page {
-  padding: 3rem;
+  padding: 1rem;
   /* background: red; */
 }
 
-#favorites-container {
+#favorites-container,
+#movie-container {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
   gap: 1.5rem;
   margin-top: 1rem;
+  padding: 1rem;
 }
 
 .favorite-recipe {
   display: flex;
   flex-direction: row;
-  align-items: stretch; /* Makes both sides equal height */
+  align-items: center; /* Makes both sides equal height */
   border-radius: 10px;
   background-color: f8f8f8;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   overflow: hidden;
   height: 10em;
+  text-align: left;
 }
 
 .favorite-recipe img {
@@ -328,36 +354,81 @@ h2.dish-title {
 .recipe-details {
   display: flex;
   flex-direction: column;
-  justify-content: space-between; /* Push title to top, buttons to bottom */
-  flex: 1;
-  padding: 1.5em;
+  justify-content: center;      /* vertically center title + buttons */
+  gap: 0.5rem;                  /* spacing between title and buttons */
+  padding: 1em;
+  flex: 1;                      /* take remaining space */
+  text-align: left;             /* ensure text inside is left aligned */
+  align-items: flex-start; 
 }
 
 .favorite-recipe h3 {
-  font-size: 1.2rem;
-  margin: 0 0 0.5rem 0;
+  margin: 0;
+  font-size: 1rem;
+  font-weight: bold;
+  color: #333;
+  width: 100%;
 }
 
 .button-group {
   display: flex;
   gap: 0.5rem;
-  margin-top: 0.8rem;
-  flex-wrap: wrap; /* Optional: wraps buttons on small screens */
+  flex-wrap: wrap;
+  width: 100%; 
+  max-width: 100%; 
+}
+
+.button-group a,
+.button-group button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Kollektif', sans-serif;
+  font-size: 0.75rem; 
+  font-weight: 600;     
+  height: 2rem;            
+  padding: 0 0.8rem;       
+  line-height: 1;
+  white-space: nowrap;
+  border-radius: 4px;
+  text-decoration: none;
+  border: none;
+  cursor: pointer;
+}
+
+.button-group a {
+  background-color: #5c6bc0;
+  color: white;
+}
+
+.button-group a:hover {
+  background-color: #3f51b5;
+}
+
+/* Save to favorites button */
+.button-group .save-favorite-btn {
+  background-color: #ff4081;
+  color: white;
+}
+
+.button-group .save-favorite-btn:hover {
+  background-color: #e91e63;
 }
 
 .favorite-recipe a,
 .view-recipes-btn,
 .save-favorite-btn {
   background-color: #5c6bc0;
+  font-family: 'Kollektif', sans-serif;
   color: white;
   border: none;
-  padding: 0.4rem 0.8rem;
+  padding: 0.3rem 0.6rem; /* Ajusté el padding para hacer los botones más pequeños */
   border-radius: 4px;
   cursor: pointer;
-  width: fit-content;
+  width: fit-content; /* Los botones se ajustan al tamaño del contenido */
   text-decoration: none;
+  white-space: nowrap; /* Evitar que el texto se divida */
 }
-
 .favorite-recipe a:hover {
   background-color: #4a569b;
 }
@@ -405,7 +476,8 @@ footer {
     font-size: 1.8rem;
   }
 
-  #favorites-container {
+  #favorites-container,
+  #movie-container {
     grid-template-columns: 1fr;
     gap: 1rem;
   }
