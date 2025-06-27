@@ -2,14 +2,16 @@ import { resolve } from "path";
 import { defineConfig } from "vite";
 
 export default defineConfig({
-  root: ".",  
+  root: ".",
+  base: "/",
   build: {
     outDir: "dist",
     rollupOptions: {
       input: {
-        main: resolve(__dirname, "index.html"),  
-        genre: resolve(__dirname, "genre.html"),  
-        favorites: resolve(__dirname, "favorites.html"),  
+        main: resolve(__dirname, "index.html"),
+        genre: resolve(__dirname, "genre.html"),
+        favorites: resolve(__dirname, "favorites.html"),
+        movie: resolve(__dirname, "movie.html"),
       },
     },
   },
@@ -19,6 +21,7 @@ export default defineConfig({
     },
   },
   server: {
+    base: "/",
     proxy: {
 
       '/api': {
